@@ -136,9 +136,8 @@
 
 - (NSURL *)localFileURLForImage:(NSString *)image
 {
-    Boolean isFirebase = [image rangeOfString:@"firebase"].length > 0;
     NSString* webStringURL = image;
-    if (!isFirebase) {
+    if (![self isUrlAlreadyEncoded:webStringURL]) {
       webStringURL = [image stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]];
     }
     NSURL* fileURL = [NSURL URLWithString:webStringURL];
@@ -315,6 +314,15 @@
                                          returningResponse:nil
                                                      error:nil];
     return data;
+}
+
+- (Boolean)isUrlAlreadyEncoded:(NSString *)url {
+    NSError *error = NULL;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"%[2-9A-F][0-9A-F]"
+                                                                           options:NSRegularExpressionCaseInsensitive
+                                                                             error:&error];
+    NSUInteger numMatches = [regex numberOfMatchesInString:url options:0 range:NSMakeRange(0, [url length])];
+    return numMatches > 0;
 }
 
 @end
