@@ -35,7 +35,6 @@ public class PhotoViewer extends CordovaPlugin {
         if (action.equals("show")) {
             this.args = args;
             this.callbackContext = callbackContext;
-
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 if (cordova.hasPermission(READ_IMAGES)) {
                     this.launchActivity();
